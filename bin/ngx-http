@@ -1,0 +1,44 @@
+#! /bin/bash
+com=$1
+domain=$2
+root=$3
+mkdir -p /tmp/nginx-tools
+rm -f /tmp/nginx-tools/http.conf
+
+if [ "$com" == "add" ]; then
+mkdir -p $root
+echo "
+server {
+	server_name $domain;
+	root $root;
+	index index.html index.htm index.nginx-debian.html
+	listen [::]:80;
+	listen 80;
+	location / {
+		try_files \$uri \$uri/ =404;
+	}
+}
+" >> /tmp/nginx-tools/http.conf
+sudo cp --remove-destination /tmp/nginx-tools/http.conf /etc/nginx/sites-available/http.$domain.conf
+
+elif [ "$com" == "remove" ]; then
+sudo rm /etc/nginx/sites-available/http.$domain.conf
+
+elif [ "$com" == "enable" ]; then
+sudo ln -s -f /etc/nginx/sites-available/http.$domain.conf /etc/nginx/sites-enabled/http.$domain.conf
+
+elif [ "$com" == "disable" ]; then
+sudo rm /etc/nginx/sites-enabled/http.$domain.conf
+
+elif [ "$com" == "redirect" ]; then
+echo "
+server {
+        server_name $domain;
+        return 301 $root\$request_uri;
+        listen [::]:80;
+        listen 80;
+}
+" >> /tmp/nginx-tools/http.conf
+sudo cp --remove-destination /tmp/nginx-tools/http.conf /etc/nginx/sites-available/http.$domain.conf
+
+fi

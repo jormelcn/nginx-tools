@@ -1,0 +1,27 @@
+#! /bin/bash
+
+sudo rm -r /etc/nginx/sites-available.backup
+sudo rm -r /etc/nginx/sites-enabled.backup
+sudo cp -r /etc/nginx/sites-available /etc/nginx/sites-available.backup
+sudo cp -r /etc/nginx/sites-enabled /etc/nginx/sites-enabled.backup
+sudo rm /etc/nginx/sites-available/*
+sudo rm /etc/nginx/sites-enabled/*
+mkdir -p /tmp/nginx-tools/root
+cert_com="certbot certonly --webroot -w /tmp/nginx-tools/root"
+for domain in "$@"
+do
+    sudo ngx-http add $domain /tmp/nginx-tools/root
+    sudo ln -s -f /etc/nginx/sites-available/http.$domain.conf /etc/nginx/sites-enabled/http.$domain.conf
+    cert_com="$cert_com -d $domain"
+done
+echo "$cert_com"
+sudo service nginx reload
+#echo "$cert_com" | sudo bash
+sudo $cert_com
+sudo rm -r /etc/nginx/sites-available
+sudo rm -r /etc/nginx/sites-enabled
+sudo cp -r /etc/nginx/sites-available.backup /etc/nginx/sites-available
+sudo cp -r /etc/nginx/sites-enabled.backup /etc/nginx/sites-enabled
+sudo rm -r /etc/nginx/sites-available.backup
+sudo rm -r /etc/nginx/sites-enabled.backup
+sudo service nginx reload
