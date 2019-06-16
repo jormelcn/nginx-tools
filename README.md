@@ -1,6 +1,25 @@
 # nginx-tools
 Herramientas para configurar facilmente dominios http y https en nginx Ubuntu
 
+## Ejemplo:
+Configurar acceso seguro mediante https a midominio.com y redireccionar las peticiones http a https.
+Para una web ubicada en /home/miusuario/midominio.com/public_html/www
+```sh
+ngx-certificate midominio.com www.midominio.com
+root="/home/miusuario/midominio.com/public_html/www"
+cert="/etc/letsencrypt/live/midominio.com/fullchain.pem"
+key="etc/letsencrypt/live/midominio.com/privkey.pem"
+ngx-https add midominio.com $root $cert $key
+ngx-https redirect www.midominio.com https://midominio.com $cert $key
+ngx-http redirect midominio.com https://midominio.com
+ngx-http redirect www.midominio.com https://midominio.com
+ngx-https enable midominio.com
+ngx-https enable www.midominio.com
+ngx-http enable midominio.com
+ngx-http enable www.midominio.com
+ngx-reload
+```
+# Documentación
 ## Prerequisitos 
 1. Intalar Ngnix: <https://ubunlog.com/nginx-instala-servidor-ubuntu/>
 ```sh
@@ -81,7 +100,7 @@ Se eliminará la configuración del directirio /etc/nginx/sites-available.
   ngx-http redirect app.mindominio.com http://midominio.com/app
 ```
 Se remplazará la configuración del dominio para efectuar la redirección.
-
+*Nota:* Recuerde habilitar la configuración del dominio
 ## ngx-certificate:
 Solicita un certificado SSL para los dominios especificados. Los certificados son firmados por Lets-Encript. Los dominios son verificados y renovados automaticamente.
 ```sh
@@ -107,6 +126,53 @@ y La llave privada en: etc/letsencrypt/live/midominio.com/privkey.pem
 
 Los cuales podrá usar para configurar acceso seguro mediante https a su sitio web.
 
-
-
-
+## ngx-https:
+### Agregar configuración https basica para un dominio:
+```sh
+  ngx-https add dominio directorio_raiz certificado_ssl llave_privada
+```
+#### Ejemplo: 
+```sh
+  ngx-https add midominio.com /home/midominio.com/www /home/midominio.com/cert /home/midominio.com/key
+```
+EL dominio apuntará al index.html en el directorio raiz indicado.
+El archivo de configuración generado se guardará en el directorio /etc/nginx/sites-available.
+Puede personalizar la configuración de este archivo si lo requiere.
+### Redirigir un dominio a otra dirección:
+```sh
+  ngx-https redirect dominio url certificado_ssl llave_privada
+```
+#### Ejemplo: 
+```sh
+  ngx-http redirect app.mindominio.com http://midominio.com/app
+```
+Se remplazará la configuración del dominio para efectuar la redirección.
+*Nota:* Recuerde habilitar la configuración del dominio
+### Habilitar la configuración https de un dominio:
+```sh
+  ngx-https enable dominio
+```
+#### Ejemplo: 
+```sh
+  ngx-http enable midominio.com
+```
+Se creará un enlace simbolico en /etc/nginx/sites-enabled apuntando al archivo de configuración del dominio
+### Deshabilitar la configuración de un dominio:
+```sh
+  ngx-http disable dominio
+```
+#### Ejemplo: 
+```sh
+  ngx-http disable midominio.com
+```
+Se eliminará el enlace simbolico en /etc/nginx/sites-enabled que apunta al archivo de configuración del dominio
+### Eliminar la configuración de un dominio:
+```sh
+  ngx-https remove dominio
+```
+#### Ejemplo: 
+```sh
+  ngx-https remove midominio.com
+```
+Se eliminará la configuración del directirio /etc/nginx/sites-available.
+**Nota:** Es importante que desabilite la configuración antes de eliminarla.
