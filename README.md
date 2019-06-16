@@ -23,8 +23,9 @@ Clonar o Descargar este repositorio y ejecutar install.sh
 ```
 **Nota:** Debes asegurarte de haber configurado correctamente el dns de tu dominio para que apunte a tu servidor.
 # Comandos
-**Nota:** Para que los cambios en la configuración tengan efecto deben estar habilitados
-## ngx-reload
+**Nota:** Para que los cambios en la configuración tengan efecto deben estar habilitados.
+
+## ngx-reload:
 ### Recargar configuración para aplicar cambios:
 ```sh
   ngx-reload 
@@ -51,7 +52,7 @@ Puede personalizar la configuración de este archivo si lo requiere.
 ```sh
   ngx-http enable app.midominio.com
 ```
-Se creará un enlace simbolico en /etc/nginx/sites-enables apuntando al archivo de configuración del dominio
+Se creará un enlace simbolico en /etc/nginx/sites-enabled apuntando al archivo de configuración del dominio
 ### Deshabilitar la configuración de un dominio:
 ```sh
   ngx-http disable dominio
@@ -60,7 +61,7 @@ Se creará un enlace simbolico en /etc/nginx/sites-enables apuntando al archivo 
 ```sh
   ngx-http disable app.midominio.com
 ```
-Se eliminará el enlace simbolico en /etc/nginx/sites-enables que apunta al archivo de configuración del dominio
+Se eliminará el enlace simbolico en /etc/nginx/sites-enabled que apunta al archivo de configuración del dominio
 ### Eliminar la configuración de un dominio:
 ```sh
   ngx-http remove dominio
@@ -79,5 +80,33 @@ Se eliminará la configuración del directirio /etc/nginx/sites-available.
 ```sh
   ngx-http redirect app.mindominio.com http://midominio.com/app
 ```
-Se remplazará la conmfiguración del dominio para efectuar la redirección.
+Se remplazará la configuración del dominio para efectuar la redirección.
+
+## ngx-certificate:
+Solicita un certificado SSL para los dominios especificados. Los certificados son firmados por Lets-Encript. Los dominios son verificados y renovados automaticamente.
+```sh
+  ngx-certificate dominio_1 dominio_2 dominio_n 
+```
+#### Ejemplo: 
+```sh
+  ngx-certificate midominio.com www.midominio.com app.mindominio.com
+```
+Si el certificado ya existia se requerirá elegir si remplazará o conservará el certificado existente.
+
+Al finalizar el proceso se obtiene una salida como la siguiente:
+```sh
+  - Congratulations! Your certificate and chain have been saved at:
+   /etc/letsencrypt/live/midominio.com/fullchain.pem
+   Your key file has been saved at:
+   /etc/letsencrypt/live/midominio.com/privkey.pem
+   Your cert will expire on 2019-09-13.
+```
+Para este caso el certificado se encontará en: /etc/letsencrypt/live/midominio.com/fullchain.pem
+
+y La llave privada en: etc/letsencrypt/live/midominio.com/privkey.pem
+
+Los cuales podrá usar para configurar acceso seguro mediante https a su sitio web.
+
+
+
 
