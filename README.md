@@ -2,7 +2,7 @@
 Herramientas para configurar facilmente dominios http y https en nginx Ubuntu
 
 ## Ejemplo:
-Configurar acceso seguro mediante https a midominio.com y redireccionar las peticiones http a https.
+Obtener certificado SSL, configurar acceso seguro mediante https a midominio.com y redireccionar las peticiones http a https.
 Para una web ubicada en /home/miusuario/midominio.com/public_html/www
 ```sh
 ngx-certificate midominio.com www.midominio.com
