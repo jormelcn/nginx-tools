@@ -138,13 +138,13 @@ Los cuales podrá usar para configurar acceso seguro mediante https a su sitio w
 EL dominio apuntará al index.html en el directorio raiz indicado.
 El archivo de configuración generado se guardará en el directorio /etc/nginx/sites-available.
 Puede personalizar la configuración de este archivo si lo requiere.
-### Redirigir un dominio a otra dirección:
+### Redirigir un dominio https a otra dirección:
 ```sh
   ngx-https redirect dominio url certificado_ssl llave_privada
 ```
 #### Ejemplo: 
 ```sh
-  ngx-http redirect app.mindominio.com http://midominio.com/app
+  ngx-https redirect app.mindominio.com https://midominio.com/app /home/midominio.com/cert /home/midominio.com/key
 ```
 Se remplazará la configuración del dominio para efectuar la redirección.
 *Nota:* Recuerde habilitar la configuración del dominio
@@ -154,19 +154,19 @@ Se remplazará la configuración del dominio para efectuar la redirección.
 ```
 #### Ejemplo: 
 ```sh
-  ngx-http enable midominio.com
+  ngx-https enable midominio.com
 ```
 Se creará un enlace simbolico en /etc/nginx/sites-enabled apuntando al archivo de configuración del dominio
-### Deshabilitar la configuración de un dominio:
+### Deshabilitar la configuración https de un dominio:
 ```sh
-  ngx-http disable dominio
+  ngx-https disable dominio
 ```
 #### Ejemplo: 
 ```sh
-  ngx-http disable midominio.com
+  ngx-https disable midominio.com
 ```
 Se eliminará el enlace simbolico en /etc/nginx/sites-enabled que apunta al archivo de configuración del dominio
-### Eliminar la configuración de un dominio:
+### Eliminar la configuración https de un dominio:
 ```sh
   ngx-https remove dominio
 ```
